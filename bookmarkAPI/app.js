@@ -2,7 +2,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var passport = require('passport');
- 
+var jwtStrategy = require('./config/passport')
+var registerApiRoutes = require('./app/routes/config')
+
 var port = process.env.PORT || 3000;
 var app = express();
 
@@ -13,9 +15,12 @@ app.use(bodyParser.json());
 // log to console
 app.use(morgan('dev'));
 
-// Use the passport package in our application
+// Initialize authentication
 app.use(passport.initialize());
+jwtStrategy(passport);
+
+registerApiRoutes(app);
 
 // Start the server
 app.listen(port);
-console.log('Server lintening on: http://localhost:' + port);
+console.log('Server listening on: http://localhost:' + port);
