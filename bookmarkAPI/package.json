@@ -1,0 +1,19 @@
+{
+  "name": "bookmarkapi",
+  "version": "0.0.0",
+  "description": "Bookmark API",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariomariani/bookmarker.git"
+  },
+  "author": "Mario Mariani",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mariomariani/bookmarker/issues"
+  },
+  "homepage": "https://github.com/mariomariani/bookmarker#readme"
+}
