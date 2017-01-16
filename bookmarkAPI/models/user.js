@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
   
 // set up a mongoose model
 var UserSchema = new Schema({
-  name: String,
+  username: String,
   password: String,
   admin: Boolean
 });

@@ -2,23 +2,30 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var passport = require('passport');
+var mongoose = require('mongoose');
+var dbConf = require('./config/database')
 var jwtStrategy = require('./config/passport')
-var registerApiRoutes = require('./app/routes/config')
+var registerApiRoutes = require('./routes/config')
 
 var port = process.env.PORT || 3000;
 var app = express();
 
-// get our request parameters
+// Get request parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// log to console
+// Log requests to console
 app.use(morgan('dev'));
 
 // Initialize authentication
 app.use(passport.initialize());
 jwtStrategy(passport);
 
+// Set mongoose to work with Promises
+mongoose.Promise = global.Promise;
+mongoose.connect(dbConf.database);
+
+// Register routes
 registerApiRoutes(app);
 
 // Start the server
