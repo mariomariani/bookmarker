@@ -5,8 +5,15 @@ var utils = require('../utils');
 
 var bookmarks = express.Router();
 
-bookmarks.get('/', auth.isAdmin(), function(req, res) {
-  Bookmark.find()
+bookmarks.get('/', function(req, res) {
+  var user = req.user;
+  var filter = {};
+
+  if (!user.admin) {
+    filter.userId = user._id;
+  }
+  
+  Bookmark.find(filter)
   .then(function(bookmarks) {
     return res.status(200).json(bookmarks);
   })
@@ -40,6 +47,7 @@ bookmarks.post('/', function(req, res) {
 });
 
 bookmarks.get('/:bookmarkId', function(req, res) {
+  var user = req.user;
   var bookmarkId = req.params.bookmarkId;
 
   if (!bookmarkId) {
@@ -48,8 +56,17 @@ bookmarks.get('/:bookmarkId', function(req, res) {
     });
   }
 
-  Bookmark.findOne({ _id: BookmarkId })
+  Bookmark.findOne({
+    _id: BookmarkId,
+    userId: user._id
+  })
   .then(function(bookmark) {
+    if (!bookmark) {
+      return res.status(404).json({
+        message: 'Bookmark not found.'
+      });
+    }
+
     return res.status(200).json(bookmark);
   })
   .catch(function(err) {
@@ -68,7 +85,10 @@ bookmarks.put('/:bookmarkId', function(req, res) {
     });
   }
 
-  Bookmark.findOne({ _id: BookmarkId })
+  Bookmark.findOne({
+    _id: BookmarkId,
+    userId: user._id
+  })
   .then(function(bookmark) {
     if (!bookmark) {
       return res.status(404).json({
