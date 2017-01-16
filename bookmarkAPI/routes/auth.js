@@ -53,7 +53,7 @@ auth.post('/authenticate', function(req, res) {
   User.findOne({ username: username })
   .then(function(user) {
     if (password === user.password) {
-      var token = utils.generateToken(user._id);
+      var token = utils.generateToken(user);
 
       return res.status(200).json({
         message: 'User successfully authenticated.',
