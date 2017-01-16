@@ -10,7 +10,7 @@ var jwtStrategy = function(passport) {
   opts.secretOrKey = config.secret;
 
   var jwtAuthentication = function(jwtPayload, done) {
-    var findById = { id: jwtPayload.id };
+    var findById = { _id: jwtPayload._id };
 
     User.findOne(findById, function(err, user) {
       if (err) {
