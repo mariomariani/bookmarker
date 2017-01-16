@@ -30,9 +30,7 @@ auth.post('/signup', function(req, res) {
   
     newUser.save()
     .then(function(createdUser) {
-      res.status(201).json({
-        message: 'User created: ' + createdUser.username
-      });
+      return res.status(201).json(createdUser);
     });
   })
   .catch(function(err) {

@@ -8,10 +8,10 @@ var users = express.Router();
 users.get('/', auth.isAdmin(), function(req, res) {
   User.find()
   .then(function(users) {
-    res.status(200).json(users);
+    return res.status(200).json(users);
   })
   .catch(function(err) {
-    res.status(500).json(err);
+    return res.status(500).json(err);
   });
 });
 

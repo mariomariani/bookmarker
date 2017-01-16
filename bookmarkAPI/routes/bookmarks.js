@@ -8,10 +8,10 @@ var bookmarks = express.Router();
 bookmarks.get('/', auth.isAdmin(), function(req, res) {
   Bookmark.find()
   .then(function(bookmarks) {
-    res.status(200).json(bookmarks);
+    return res.status(200).json(bookmarks);
   })
   .catch(function(err) {
-    res.status(500).json(err);
+    return res.status(500).json(err);
   });
 });
 
@@ -32,9 +32,25 @@ bookmarks.post('/', function(req, res) {
 
   newBookmark.save()
   .then(function(createdBookmark) {
-    res.status(201).json({
-      message: 'Bookmark created: ' + createdBookmark.url
+    return res.status(201).json(createdBookmark);
+  })
+  .catch(function(err) {
+    return res.status(500).json(err);
+  });
+});
+
+bookmarks.get('/:bookmarkId', function(req, res) {
+  var bookmarkId = req.params.bookmarkId;
+
+  if (!bookmarkId) {
+    return res.status(400).json({
+      message: 'BookmarkId required.'
     });
+  }
+
+  Bookmark.findOne({ _id: BookmarkId })
+  .then(function(bookmark) {
+    return res.status(200).json(bookmark);
   })
   .catch(function(err) {
     return res.status(500).json(err);
@@ -52,9 +68,7 @@ bookmarks.put('/:bookmarkId', function(req, res) {
     });
   }
 
-  Bookmark.findOne({
-    bookmarkId: bookmarkId,
-  })
+  Bookmark.findOne({ _id: BookmarkId })
   .then(function(bookmark) {
     if (!bookmark) {
       return res.status(404).json({
@@ -65,9 +79,28 @@ bookmarks.put('/:bookmarkId', function(req, res) {
     bookmark.url = url;
     bookmark.save()
     .then(function(updatedBookmark) {
-      res.status(200).json({
-        message: 'Bookmark updated: ' + createdBookmark.url
-      });
+      return res.status(200).json(updatedBookmark);
+    });
+  })
+  .catch(function(err) {
+    return res.status(500).json(err);
+  });
+});
+
+bookmarks.delete('/:bookmarkId', function(req, res) {
+  var user = req.user;
+  var bookmarkId = req.params.bookmarkId;
+
+  if (!bookmarkId) {
+    return res.status(400).json({
+      message: 'BookmarkId required.'
+    });
+  }
+
+  Bookmark.remove({ _id: bookmarkId })
+  .then(function() {
+    return res.status(200).json({
+      message: 'Bookmark removed: ' + bookmarkId
     });
   })
   .catch(function(err) {
