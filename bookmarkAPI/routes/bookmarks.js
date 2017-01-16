@@ -57,7 +57,7 @@ bookmarks.get('/:bookmarkId', function(req, res) {
   }
 
   Bookmark.findOne({
-    _id: BookmarkId,
+    _id: bookmarkId,
     userId: user._id
   })
   .then(function(bookmark) {
@@ -86,7 +86,7 @@ bookmarks.put('/:bookmarkId', function(req, res) {
   }
 
   Bookmark.findOne({
-    _id: BookmarkId,
+    _id: bookmarkId,
     userId: user._id
   })
   .then(function(bookmark) {
@@ -117,10 +117,22 @@ bookmarks.delete('/:bookmarkId', function(req, res) {
     });
   }
 
-  Bookmark.remove({ _id: bookmarkId })
-  .then(function() {
-    return res.status(200).json({
-      message: 'Bookmark removed: ' + bookmarkId
+  Bookmark.findOne({
+    _id: bookmarkId,
+    userId: user._id
+  })
+  .then(function(bookmark) {
+    if (!bookmark) {
+      return res.status(404).json({
+        message: 'Bookmark not found.'
+      });
+    }
+
+    bookmark.remove()
+    .then(function() {
+      return res.status(200).json({
+        message: 'Bookmark removed: ' + bookmarkId
+      });
     });
   })
   .catch(function(err) {
