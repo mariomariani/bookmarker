@@ -1,0 +1,13 @@
+{% if bookmarks %}
+    <ul>
+    {% for bookmark in bookmarks %}
+        <li>
+        	<a href="{% url 'detail' bookmark %}">
+        		{{ bookmark }}
+    		</a>
+		</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No bookmarks are available.</p>
+{% endif %}
