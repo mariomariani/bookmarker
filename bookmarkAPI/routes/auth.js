@@ -48,9 +48,9 @@ auth.post('/authenticate', function(req, res) {
     });
   }
 
-  User.findOne({ username: username })
+  User.findOne({ username: username, password: password })
   .then(function(user) {
-    if (password === user.password) {
+    if (user) {
       var token = utils.generateToken(user);
 
       return res.status(200).json({
