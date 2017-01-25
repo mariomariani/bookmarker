@@ -1,13 +1,36 @@
-{% if bookmarks %}
-    <ul>
-    {% for bookmark in bookmarks %}
-        <li>
-        	<a href="{% url 'detail' bookmark %}">
-        		{{ bookmark }}
-    		</a>
-		</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No bookmarks are available.</p>
-{% endif %}
+<div>
+	{% if bookmarks %}
+	    <ul>
+	    {% for bookmark in bookmarks %}
+	        <li>
+	        	<a href="{% url 'bookmarker:detail' bookmark %}">
+	        		{{ bookmark }}
+	    		</a>
+			</li>
+	    {% endfor %}
+	    </ul>
+	{% else %}
+	    <p>No bookmarks are available.</p>
+	{% endif %}
+</div>
+
+<div>
+	{% if error_message %}
+		<p>
+			<strong>
+				{{ error_message }}
+			</strong>
+		</p>
+	{% endif %}
+
+	<form action="{% url 'bookmarker:index' %}" method="post">
+		{% csrf_token %}
+	    <label>
+	    	URL
+	    	<input name="url" value="" />
+		</label>
+		<br />
+
+		<input type="submit" value="Bookmark It!" />
+	</form>
+</div>

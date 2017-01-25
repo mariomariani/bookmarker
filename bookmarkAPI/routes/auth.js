@@ -55,6 +55,7 @@ auth.post('/authenticate', function(req, res) {
 
       return res.status(200).json({
         message: 'User successfully authenticated.',
+        user: user,
         token: token
       });
     }

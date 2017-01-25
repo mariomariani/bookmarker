@@ -68,6 +68,14 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'bookmarker.auth.auth_backend.AuthBackend',
+]
+
+LOGIN_URL = '/bookmarker/login'
+
+AUTH_USER_MODEL = 'bookmarker.User'
+
 WSGI_APPLICATION = 'bookmarkApp.wsgi.application'
 
 
