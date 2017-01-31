@@ -16,11 +16,10 @@ class AuthBackend(object):
                 user.is_admin = backend_user['admin']
                 user.token = backend_user['token']
                 user.save()
-            # user['token'] = backend_user['token']
             return user
         
-    def get_user(self, username):
-        return User(username=username)
+    def get_user(self, id):
+        return User.objects.get(id=id)
 
     def backend_authenticate(self, username, password, errors=[]):
         url = 'http://localhost:3000/api/authenticate'

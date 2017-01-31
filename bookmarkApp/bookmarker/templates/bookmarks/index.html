@@ -3,8 +3,8 @@
 	    <ul>
 	    {% for bookmark in bookmarks %}
 	        <li>
-	        	<a href="{% url 'bookmarker:detail' bookmark %}">
-	        		{{ bookmark }}
+	        	<a href="{% url 'bookmarker:detail' bookmark.id %}">
+	        		{{ bookmark.url }}
 	    		</a>
 			</li>
 	    {% endfor %}

@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
+from bookmarker.services import BookmarkService
 
 def auth(request):
     errors = []
@@ -15,8 +16,6 @@ def auth(request):
         user = authenticate(username=username, password=password,
             errors=errors)
         if user is not None:
-            print user
-            print '------{0}'.format(user.token)
             login(request, user)
             if user.is_superuser:
                 return redirect('users/index.html')
@@ -27,7 +26,15 @@ def auth(request):
 
 @login_required
 def index(request):
-    bookmarks = [1, 2, 3]
+    service = BookmarkService()
+
+    # service.addBookmark(request.user, '')
+
+    bookmarks = service.getUserBookmarks(request.user)
+
+    for bookmark in bookmarks:
+        bookmark['id'] = bookmark['_id']
+
     context = {
         'bookmarks': bookmarks,
     }
@@ -38,9 +45,8 @@ def create(request):
     HttpResponseRedirect(reverse('bookmarker:index'))
 
 def detail(request, bookmark_id):
-    bookmarks = [1, 2, 3]
-    try:
-        bookmark = bookmarks[int(bookmark_id)]
-    except:
-        raise Http404("Bookmark not found.")
+    service = BookmarkService()
+    bookmark = service.getBookmark(bookmark_id)
+    if not bookmark:
+        return Http404("Bookmark not found.")
     return render(request, 'bookmarks/detail.html', { 'bookmark': bookmark })
