@@ -9,10 +9,33 @@ bookmarks.get('/', function(req, res) {
   var user = req.user;
   var filter = {};
 
-  if (!user.admin) {
-    filter.userId = user._id;
+  if (user.admin) {
+    Bookmark
+    .aggregate()
+    .group({ 
+      _id: '$userId',
+      bookmarks: { $push: '$$ROOT' },
+    })
+    .lookup({
+      from: 'users',
+      localField: '_id',
+      foreignField: '_id',
+      as: 'user',
+    })
+    .exec(function(err, bookmarks) {
+      if (err) {
+        return res.status(500).json(
+          { message: 'Error getting data' });
+      }
+      return res.status(200).json(bookmarks);
+    });
+    
+    return;
   }
+
+  filter.userId = user._id;
   
+  // Find by userId
   Bookmark.find(filter)
   .then(function(bookmarks) {
     return res.status(200).json(bookmarks);
