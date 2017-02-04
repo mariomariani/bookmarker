@@ -1,14 +1,6 @@
 <h1>Bookmark<h1>
 
-<h2>Login</h2>
-
-{% if message %}
-    <p class="info">
-        <strong>
-            {{ message }}
-        </strong>
-    </p>
-{% endif %}
+<h2>New User</h2>
 
 {% if error_message %}
     <p class="error">
@@ -18,7 +10,7 @@
     </p>
 {% endif %}
 
-<form method="post" action="{% url 'bookmarker:login' %}">
+<form method="post" action="{% url 'bookmarker:signup' %}">
     {% csrf_token %}
 
     <p>
@@ -33,7 +25,5 @@
         </label>
     </p>
 
-    <button type="submit">Login</button>
+    <button type="submit">Create</button>
 </form>
-
-<a href="{% url 'bookmarker:signup' %}">New user</a>

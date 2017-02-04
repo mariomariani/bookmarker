@@ -4,13 +4,19 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
-from bookmarker.services import BookmarkService, merge_errors
+from bookmarker.services import BookmarkService, merge_errors, UserService
 
 def auth(request):
-    errors = []
+    if request.method == 'GET':
+        if request.session:
+            context = request.session.pop('context', None)
+        return render(request, 'login.html', context)
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+    
+        errors = []
         user = authenticate(username=username, password=password,
             errors=errors)
         if user is not None:
@@ -18,8 +24,31 @@ def auth(request):
             if user.is_superuser:
                 return redirect('users/index.html')
             return redirect('bookmarker:index')
+        else:
+            context = { 'error_message': merge_errors(errors) }
+            return render(request, 'login.html', context)
 
-    return render(request, 'login.html', merge_errors(errors))
+def signup(request):
+    if request.method == 'GET':
+        return render(request, 'signup.html')
+    
+    if request.method == 'POST':
+        user_service = UserService()
+        username = request.POST['username']
+        password = request.POST['password']
+
+        errors = []
+        user = user_service.create_user(username, password, errors)
+        
+        if user:
+            context = { 'message': 'User created successfully' }
+            request.session['context'] = context
+            # return render(request, 'login.html', context  )
+            return redirect('bookmarker:login')
+            # return render(request, 'signup.html', context)
+        
+        context = { 'error_message': merge_errors(errors) }
+        return render(request, 'signup.html', context)
 
 @login_required
 def index(request):
@@ -27,10 +56,10 @@ def index(request):
     
     if request.method == 'POST':
         bookmark = { 'url': request.POST['url'] }
-        service.addBookmark(request.user, bookmark)
+        service.add_bookmark(request.user, bookmark)
         return redirect('bookmarker:index')
 
-    bookmarks = service.getUserBookmarks(request.user)
+    bookmarks = service.get_user_bookmarks(request.user)
 
     context = { 'bookmarks': bookmarks }
     return render(request, 'bookmarks/index.html', context)
@@ -40,7 +69,7 @@ def edit(request, bookmark_id):
     service = BookmarkService()
 
     if request.method == 'GET':
-        bookmark = service.getBookmark(user=request.user,
+        bookmark = service.get_bookmark(user=request.user,
             bookmark_id=bookmark_id)
         
         if not bookmark:
@@ -54,7 +83,7 @@ def edit(request, bookmark_id):
             'id': bookmark_id,
             'url': request.POST['url'],
         }
-        service.updateBookmark(request.user, bookmark)
+        service.update_bookmark(request.user, bookmark)
         
         return redirect('bookmarker:index')
 
