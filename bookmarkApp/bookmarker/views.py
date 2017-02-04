@@ -1,12 +1,10 @@
 from django.http import Http404
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate
-from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth import authenticate, login, logout
 from bookmarker.services import BookmarkService, merge_errors, UserService
 
-def auth(request):
+def login_view(request):
     if request.method == 'GET':
         if request.session:
             context = request.session.pop('context', None)
@@ -21,12 +19,14 @@ def auth(request):
             errors=errors)
         if user is not None:
             login(request, user)
-            if user.is_superuser:
-                return redirect('users/index.html')
             return redirect('bookmarker:index')
         else:
             context = { 'error_message': merge_errors(errors) }
             return render(request, 'login.html', context)
+
+
+def logout_view(request):
+    logout(request)
 
 def signup(request):
     if request.method == 'GET':
@@ -43,9 +43,7 @@ def signup(request):
         if user:
             context = { 'message': 'User created successfully' }
             request.session['context'] = context
-            # return render(request, 'login.html', context  )
             return redirect('bookmarker:login')
-            # return render(request, 'signup.html', context)
         
         context = { 'error_message': merge_errors(errors) }
         return render(request, 'signup.html', context)
@@ -59,21 +57,27 @@ def index(request):
         service.add_bookmark(request.user, bookmark)
         return redirect('bookmarker:index')
 
-    bookmarks = service.get_user_bookmarks(request.user)
 
-    context = { 'bookmarks': bookmarks }
+    bookmarks = service.get_user_bookmarks(request.user)
+    context = {}
+
+    if request.user.is_admin:
+        context['grouped_bookmarks'] = bookmarks
+        return render(request, 'bookmarks/grouped.html', context)
+
+    context['bookmarks'] = bookmarks
     return render(request, 'bookmarks/index.html', context)
 
 @login_required
 def edit(request, bookmark_id):
-    service = BookmarkService()
+    bookmark_service = BookmarkService()
 
     if request.method == 'GET':
-        bookmark = service.get_bookmark(user=request.user,
+        bookmark = bookmark_service.get_bookmark(user=request.user,
             bookmark_id=bookmark_id)
         
         if not bookmark:
-            return Http404("Bookmark not found.")
+            raise Http404("Bookmark not found.")
         
         context = { 'bookmark': bookmark }
         return render(request, 'bookmarks/edit.html', context)
@@ -83,7 +87,19 @@ def edit(request, bookmark_id):
             'id': bookmark_id,
             'url': request.POST['url'],
         }
-        service.update_bookmark(request.user, bookmark)
+        bookmark_service.update_bookmark(request.user, bookmark)
         
         return redirect('bookmarker:index')
 
+def is_admin(user):
+    return user.is_admin
+
+@login_required
+@user_passes_test(is_admin)
+def users(request):
+    user_service = UserService()
+
+    users = user_service.get_users(user=request.user)
+    context = { 'users': users }
+
+    return render(request, 'users/index.html', context)

@@ -4,8 +4,14 @@ from bookmarker.models import User
 def merge_errors(errors=[]):
     return ', '.join(errors)
 
-def fix_id(bookmark):
-    bookmark['id'] = bookmark['_id']
+def fix_ids(mongo_objs):
+    for obj in mongo_objs:
+        fix_id(obj)
+    return mongo_objs
+
+def fix_id(mongo_obj):
+    mongo_obj['id'] = mongo_obj['_id']
+    return mongo_obj
 
 def get_auth_header(user):
     return { 'Authorization': 'JWT {0}'.format(user.token) }
@@ -16,22 +22,22 @@ class BookmarkService:
         self.bookmarks_url = 'http://localhost:3000/api/bookmarks'
 
     def get_user_bookmarks(self, user):
-        bookmarks = requests.get(self.bookmarks_url, 
-            headers=get_auth_header(user)).json()
-
-        for bookmark in bookmarks:
-            fix_id(bookmark)
-
-        return bookmarks
+        response = requests.get(self.bookmarks_url, 
+            headers=get_auth_header(user))
+        
+        if response.status_code == 200:
+            bookmarks = response.json()
+            return fix_ids(bookmarks)
 
     def get_bookmark(self, user, bookmark_id):
         url = '{0}/{1}'.format(self.bookmarks_url, bookmark_id)
 
-        bookmark = requests.get(url,
-            headers=get_auth_header(user)).json()
+        response = requests.get(url,
+            headers=get_auth_header(user))
 
-        fix_id(bookmark)
-        return bookmark
+        if response.status_code == 200:
+            bookmark = response.json()
+            return fix_id(bookmark)
 
     def add_bookmark(self, user, bookmark):
         bookmark = requests.post(self.bookmarks_url,
@@ -65,4 +71,8 @@ class UserService:
             error_message = response.json()['message']
             errors.append(error_message)
 
+    def get_users(self, user):
+        users = requests.get(self.users_url, 
+            headers=get_auth_header(user)).json()
 
+        return fix_ids(users)
