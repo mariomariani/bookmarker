@@ -6,6 +6,7 @@
 
 {% block content %}
     <div>
+        <!-- Error message -->
         {% if error_message %}
             <p>
                 <strong>
@@ -14,6 +15,7 @@
             </p>
         {% endif %}
 
+        <!-- Edit Bookmark Form -->
         <form action="{% url 'bookmarker:edit' bookmark.id %}" method="post">
             {% csrf_token %}
             <label>
@@ -26,6 +28,6 @@
         </form>
     </div>
 
-
+    <!-- Back to Bookmarks -->
     <a href="/bookmarker">Bookmarks</a>
 {% endblock %}
