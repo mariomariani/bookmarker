@@ -24,7 +24,6 @@ def login_view(request):
             context = { 'error_message': merge_errors(errors) }
             return render(request, 'login.html', context)
 
-
 def logout_view(request):
     logout(request)
 
