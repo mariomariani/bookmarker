@@ -5,30 +5,10 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Add Bookmark Form -->
-    <div>
-        {% if error_message %}
-            <p>
-                <strong>
-                    {{ error_message }}
-                </strong>
-            </p>
-        {% endif %}
-
-        <form action="{% url 'bookmarker:index' %}" method="post">
-            {% csrf_token %}
-            <label>
-                URL
-                <input name="url" value="" />
-            </label>
-            <br />
-
-            <input type="submit" value="Bookmark It!" />
-        </form>
-    </div>
-
     <!-- List Bookmarks -->
-    <div>
+    <div class="col-md-8">
+        <h3>Your Bookmarks</h3>
+
         {% if bookmarks %}
             <ul>
             {% for bookmark in bookmarks %}
@@ -42,5 +22,21 @@
         {% else %}
             <p>No bookmarks available.</p>
         {% endif %}
+    </div>
+
+    <!-- Add Bookmark Form -->
+    <div class="col-md-4">
+        <h3>Add Bookmark</h3>
+
+        <form action="{% url 'bookmarker:index' %}" method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="bookmark_url">URL</label>
+                <input name="url" id="bookmark_url" value="" class="form-control"/>
+            </div>
+
+            <input type="submit" value="Bookmark It!" class="btn btn-primary"/>
+        </form>
     </div>
 {% endblock %}

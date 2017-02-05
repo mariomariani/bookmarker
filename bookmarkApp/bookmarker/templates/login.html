@@ -5,43 +5,29 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Info Message -->
-    {% if message %}
-        <p class="info">
-            <strong>
-                {{ message }}
-            </strong>
-        </p>
-    {% endif %}
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Login Form -->
+            <form method="post" action="{% url 'bookmarker:login' %}">
+                {% csrf_token %}
 
-    <!-- Error Message -->
-    {% if error_message %}
-        <p class="error">
-            <strong>
-                {{ error_message }}
-            </strong>
-        </p>
-    {% endif %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" class="form-control">
+                </div>
 
-    <!-- Login Form -->
-    <form method="post" action="{% url 'bookmarker:login' %}">
-        {% csrf_token %}
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-control">
+                </div>
 
-        <p>
-            <label>Username
-                <input type="text" name="username">
-            </label>
-        </p>
+                <p>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </p>
+            </form>
 
-        <p>
-            <label>Password
-                <input type="password" name="password">
-            </label>
-        </p>
-
-        <button type="submit">Login</button>
-    </form>
-
-    <!-- New User link -->
-    <a href="{% url 'bookmarker:signup' %}">New user</a>
+            <!-- New User link -->
+            <a href="{% url 'bookmarker:signup' %}">Sign Up</a>
+        </div>
+    </div>
 {% endblock %}

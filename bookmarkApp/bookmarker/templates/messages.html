@@ -1,0 +1,17 @@
+<!-- Info Message -->
+{% if message %}
+    <p class="info">
+        <strong>
+            {{ message }}
+        </strong>
+    </p>
+{% endif %}
+
+<!-- Error Message -->
+{% if error_message %}
+    <p class="error">
+        <strong>
+            {{ error_message }}
+        </strong>
+    </p>
+{% endif %}

@@ -14,11 +14,18 @@
         <!-- Static navbar -->
         {% include 'navbar.html' %}
         
-        {% block page_title %}
-            <h2>Page Title</h2>
-        {% endblock %}
-        
-        {% block content %}{% endblock %}
+        <div class="container-fluid">
+            <div class="page-header">
+                {% block page_title %}
+                    <h2>Page Title</h2>
+                {% endblock %}
+            </div>
+            
+            <!-- Info and Error Messages -->
+            {% include 'messages.html' %}
+
+            {% block content %}{% endblock %}
+        </div>
 
         <!-- JS -->
         <!-- jQuery -->

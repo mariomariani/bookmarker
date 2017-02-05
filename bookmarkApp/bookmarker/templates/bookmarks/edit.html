@@ -6,15 +6,6 @@
 
 {% block content %}
     <div>
-        <!-- Error message -->
-        {% if error_message %}
-            <p>
-                <strong>
-                    {{ error_message }}
-                </strong>
-            </p>
-        {% endif %}
-
         <!-- Edit Bookmark Form -->
         <form action="{% url 'bookmarker:edit' bookmark.id %}" method="post">
             {% csrf_token %}
