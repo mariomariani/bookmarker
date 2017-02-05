@@ -1,25 +1,31 @@
-<h1> Edit Bookmark </h1>
+{% extends 'base.html' %}
 
-<div>
-	{% if error_message %}
-		<p>
-			<strong>
-				{{ error_message }}
-			</strong>
-		</p>
-	{% endif %}
+{% block page_title %}
+    <h2> Edit Bookmark </h2>
+{% endblock %}
 
-	<form action="{% url 'bookmarker:edit' bookmark.id %}" method="post">
-		{% csrf_token %}
-	    <label>
-	    	URL
-	    	<input name="url" value="{{ bookmark.url }}" />
-		</label>
-		<br />
+{% block content %}
+    <div>
+        {% if error_message %}
+            <p>
+                <strong>
+                    {{ error_message }}
+                </strong>
+            </p>
+        {% endif %}
 
-		<input type="submit" value="Save" />
-	</form>
-</div>
+        <form action="{% url 'bookmarker:edit' bookmark.id %}" method="post">
+            {% csrf_token %}
+            <label>
+                URL
+                <input name="url" value="{{ bookmark.url }}" />
+            </label>
+            <br />
+
+            <input type="submit" value="Save" />
+        </form>
+    </div>
 
 
-<a href="/bookmarker">Bookmarks</a>
+    <a href="/bookmarker">Bookmarks</a>
+{% endblock %}

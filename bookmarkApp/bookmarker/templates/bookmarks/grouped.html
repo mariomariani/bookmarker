@@ -1,29 +1,32 @@
-<h1>Bookmark<h1>
+{% extends 'base.html' %}
 
-<h2>Bookmarks by User</h2>
+{% block page_title %}
+    <h2>Bookmarks by User</h2>
+{% endblock %}
 
-<!-- List Bookmarks grouped by User -->
-<div>
-    {% if grouped_bookmarks %}
-        <ul>
-            {% for group in grouped_bookmarks %}
-                <li>
-                    <!-- User -->
-                    {{ group.user.0.username }}
-                    
-                    <!-- Bookmarks -->
-                    <ul>
-                        {% for bookmark in group.bookmarks %}
-                            <li>
-                                {{ bookmark.url }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No bookmarks available.</p>
-    {% endif %}
-</div>
-
+{% block content %}
+    <!-- List Bookmarks grouped by User -->
+    <div>
+        {% if grouped_bookmarks %}
+            <ul>
+                {% for group in grouped_bookmarks %}
+                    <li>
+                        <!-- User -->
+                        {{ group.user.0.username }}
+                        
+                        <!-- Bookmarks -->
+                        <ul>
+                            {% for bookmark in group.bookmarks %}
+                                <li>
+                                    {{ bookmark.url }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No bookmarks available.</p>
+        {% endif %}
+    </div>
+{% endblock %}

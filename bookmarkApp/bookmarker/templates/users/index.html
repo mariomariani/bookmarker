@@ -1,18 +1,23 @@
-<h1>Bookmark<h1>
+{% extends 'base.html' %}
 
-<h2>Users</h2>
+{% block page_title %}
+    <h2>Users</h2>
+{% endblock %}
 
-<div>
-    <table>
-    <tr>
-        <th>Username</th>
-        <th>Admin</th>
-    </tr>
-    {% for user in users %}
+{% block content %}
+    <!-- List Users -->
+    <div>
+        <table>
         <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.admin }}</td>
+            <th>Username</th>
+            <th>Admin</th>
         </tr>
-    {% endfor %}
-    </table>
-</div>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.admin }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% endblock %}

@@ -1,42 +1,46 @@
-<h1>Bookmark<h1>
+{% extends 'base.html' %}
 
-<h2>Bookmarks</h2>
+{% block page_title %}
+    <h2>Bookmarks</h2>
+{% endblock %}
 
-<!-- Add Bookmark Form -->
-<div>
-	{% if error_message %}
-		<p>
-			<strong>
-				{{ error_message }}
-			</strong>
-		</p>
-	{% endif %}
+{% block content %}
+    <!-- Add Bookmark Form -->
+    <div>
+        {% if error_message %}
+            <p>
+                <strong>
+                    {{ error_message }}
+                </strong>
+            </p>
+        {% endif %}
 
-	<form action="{% url 'bookmarker:index' %}" method="post">
-		{% csrf_token %}
-	    <label>
-	    	URL
-	    	<input name="url" value="" />
-		</label>
-		<br />
+        <form action="{% url 'bookmarker:index' %}" method="post">
+            {% csrf_token %}
+            <label>
+                URL
+                <input name="url" value="" />
+            </label>
+            <br />
 
-		<input type="submit" value="Bookmark It!" />
-	</form>
-</div>
+            <input type="submit" value="Bookmark It!" />
+        </form>
+    </div>
 
-<!-- List Bookmarks -->
-<div>
-	{% if bookmarks %}
-	    <ul>
-	    {% for bookmark in bookmarks %}
-	        <li>
-	        	<a href="{% url 'bookmarker:edit' bookmark.id %}">
-	        		{{ bookmark.url }}
-	    		</a>
-			</li>
-	    {% endfor %}
-	    </ul>
-	{% else %}
-	    <p>No bookmarks available.</p>
-	{% endif %}
-</div>
+    <!-- List Bookmarks -->
+    <div>
+        {% if bookmarks %}
+            <ul>
+            {% for bookmark in bookmarks %}
+                <li>
+                    <a href="{% url 'bookmarker:edit' bookmark.id %}">
+                        {{ bookmark.url }}
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No bookmarks available.</p>
+        {% endif %}
+    </div>
+{% endblock %}
