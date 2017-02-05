@@ -6,6 +6,7 @@ app_name = 'bookmarker'
 urlpatterns = [
     url(r'^login/?$', views.login_view, name='login'),
     url(r'^signup/?$', views.signup, name='signup'),
+    url(r'^logout/?$', views.logout_view, name='logout'),
 
     url(r'^$', RedirectView.as_view(url='bookmarks')),
     url(r'^users/?$', views.users, name='users'),

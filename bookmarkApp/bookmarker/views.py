@@ -26,6 +26,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+    return redirect('bookmarker:login')
 
 def signup(request):
     if request.method == 'GET':
