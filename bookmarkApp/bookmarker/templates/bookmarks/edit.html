@@ -5,20 +5,24 @@
 {% endblock %}
 
 {% block content %}
-    <div>
-        <!-- Edit Bookmark Form -->
-        <form action="{% url 'bookmarker:edit' bookmark.id %}" method="post">
-            {% csrf_token %}
-            <label>
-                URL
-                <input name="url" value="{{ bookmark.url }}" />
-            </label>
-            <br />
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Edit Bookmark Form -->
+            <form action="{% url 'bookmarker:edit' bookmark.id %}" method="post">
+                {% csrf_token %}
 
-            <input type="submit" value="Save" />
-        </form>
+                 <div class="form-group">
+                    <label for="bookmark_url">URL</label>
+                    <input type="text" name="url" id="bookmark_url" class="form-control" value="{{ bookmark.url }}">
+                </div>
+
+                <p>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </p>
+            </form>
+
+            <!-- Back to Bookmarks -->
+            <a href="{% url 'bookmarker:index' %}">Bookmarks</a>
+        </div>
     </div>
-
-    <!-- Back to Bookmarks -->
-    <a href="{% url 'bookmarker:index' %}">Bookmarks</a>
 {% endblock %}
