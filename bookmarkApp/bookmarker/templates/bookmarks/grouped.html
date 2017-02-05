@@ -8,11 +8,14 @@
     <!-- List Bookmarks grouped by User -->
     <div>
         {% if grouped_bookmarks %}
-            <ul>
-                {% for group in grouped_bookmarks %}
-                    <li>
+            {% for group in grouped_bookmarks %}
+                {% if forloop.counter0|divisibleby:3 %}
+                    <div class="row">
+                {% endif %}
+                    <div class="col-md-4">
+
                         <!-- User -->
-                        {{ group.user.0.username }}
+                        <h3>{{ group.user.0.username }}</h3>
                         
                         <!-- Bookmarks -->
                         <ul>
@@ -22,9 +25,11 @@
                                 </li>
                             {% endfor %}
                         </ul>
-                    </li>
-                {% endfor %}
-            </ul>
+                    </div>
+                {% if forloop.counter|divisibleby:3 %}
+                    </div>
+                {% endif %}
+            {% endfor %}
         {% else %}
             <p>No bookmarks available.</p>
         {% endif %}
